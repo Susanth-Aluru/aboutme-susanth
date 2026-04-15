@@ -957,6 +957,130 @@
     </section>
 
 
+    <!-- Compositions -->
+<section id="compositions" class="py-20 px-6 max-w-6xl mx-auto">
+  <div class="flex items-center gap-6 mb-10">
+    <span class="w-12 h-1 bg-rose-500 rounded-full"></span>
+    <div>
+      <h2 class="text-4xl font-bold text-white">Compositions(made in Music Maker)</h2>
+      <p class="text-gray-500 text-xs uppercase tracking-widest mt-1">Made in Music Maker · Hobby</p>
+    </div>
+  </div>
+
+  <div class="max-w-sm">
+    <div class="card p-5 rounded-3xl flex flex-col gap-4 border-rose-500/20 hover:border-rose-500/40 transition-all duration-300">
+
+      <!-- Cover Art -->
+      <div class="w-full aspect-square rounded-2xl overflow-hidden bg-slate-800 border border-white/5">
+        <img src="Clouds Over The Flag.png" alt="Clouds Over The Flag cover" class="w-full h-full object-cover">
+      </div>
+
+      <!-- Track Info -->
+      <div class="flex items-start justify-between gap-2 px-1">
+        <div>
+          <h3 class="text-base font-bold text-white leading-tight">Clouds Over The Flag</h3>
+          <p class="text-xs text-gray-500 mt-0.5">SA King · 2026</p>
+        </div>
+        <span class="shrink-0 px-2 py-1 bg-rose-500/10 rounded-lg text-[9px] font-bold uppercase tracking-wider text-rose-400 border border-rose-500/20">Original</span>
+      </div>
+
+      <!-- Custom Audio Player -->
+      <div class="px-1" id="comp-player">
+        <audio id="comp-audio" src="Clouds_On_The_Flag(My Music).wav" preload="metadata"></audio>
+
+        <!-- Progress Bar -->
+        <div class="relative w-full h-1.5 bg-white/10 rounded-full cursor-pointer mb-3 group" id="comp-progress-bar">
+          <div class="h-full bg-rose-500 rounded-full transition-all duration-100 relative" id="comp-progress-fill" style="width:0%">
+            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity -mr-1.5"></div>
+          </div>
+        </div>
+
+        <!-- Controls Row -->
+        <div class="flex items-center gap-3">
+          <!-- Play/Pause -->
+          <button id="comp-play-btn" onclick="compTogglePlay()"
+            class="w-10 h-10 rounded-full bg-rose-500 hover:bg-rose-400 flex items-center justify-center shrink-0 transition-all active:scale-95 shadow-lg shadow-rose-500/30">
+            <svg id="comp-play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4 ml-0.5">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg id="comp-pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4 hidden">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+
+          <!-- Time -->
+          <div class="flex items-center gap-1 text-[11px] font-mono text-gray-400">
+            <span id="comp-current">0:00</span>
+            <span class="text-gray-600">/</span>
+            <span id="comp-duration">–:––</span>
+          </div>
+
+          <!-- Volume Toggle -->
+          <button onclick="compToggleMute()" class="ml-auto text-gray-500 hover:text-white transition-colors">
+            <svg id="comp-vol-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const compAudio = document.getElementById('comp-audio');
+  const compFill = document.getElementById('comp-progress-fill');
+  const compBar = document.getElementById('comp-progress-bar');
+  const compCurrent = document.getElementById('comp-current');
+  const compDuration = document.getElementById('comp-duration');
+  const compPlayIcon = document.getElementById('comp-play-icon');
+  const compPauseIcon = document.getElementById('comp-pause-icon');
+
+  function compFmt(s) {
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2,'0')}`;
+  }
+
+  compAudio.addEventListener('loadedmetadata', () => {
+    compDuration.textContent = compFmt(compAudio.duration);
+  });
+
+  compAudio.addEventListener('timeupdate', () => {
+    const pct = (compAudio.currentTime / compAudio.duration) * 100 || 0;
+    compFill.style.width = pct + '%';
+    compCurrent.textContent = compFmt(compAudio.currentTime);
+  });
+
+  compAudio.addEventListener('ended', () => {
+    compPlayIcon.classList.remove('hidden');
+    compPauseIcon.classList.add('hidden');
+  });
+
+  compBar.addEventListener('click', (e) => {
+    const rect = compBar.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    compAudio.currentTime = pct * compAudio.duration;
+  });
+
+  function compTogglePlay() {
+    if (compAudio.paused) {
+      compAudio.play();
+      compPlayIcon.classList.add('hidden');
+      compPauseIcon.classList.remove('hidden');
+    } else {
+      compAudio.pause();
+      compPlayIcon.classList.remove('hidden');
+      compPauseIcon.classList.add('hidden');
+    }
+  }
+
+  function compToggleMute() {
+    compAudio.muted = !compAudio.muted;
+    document.getElementById('comp-vol-icon').style.opacity = compAudio.muted ? '0.3' : '1';
+  }
+</script>
+
 <!--academics-->    
 
 
